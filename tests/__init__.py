@@ -8,7 +8,7 @@ class EchoServer(server.Server):
         return request
 
 
-def get_random_path():
+def get_random_path() -> str:
     _, temp_file_path = tempfile.mkstemp()
     os.remove(temp_file_path)
     return temp_file_path
