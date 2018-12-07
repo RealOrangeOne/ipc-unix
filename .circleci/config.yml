@@ -1,0 +1,12 @@
+version: 2.0
+
+jobs:
+    build:
+        docker:
+            - image: circleci/python:latest
+        working_directory: ~/ipc_unix
+        steps:
+            - checkout
+            - run: pip install -e .
+            - run: pip install -r dev-requirements.txt
+            - run: python setup.py test
