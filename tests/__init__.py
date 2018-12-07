@@ -1,9 +1,9 @@
-from ipc_unix import server
+from ipc_unix.simple import Server
 import tempfile
 import os
 
 
-class EchoServer(server.Server):
+class EchoServer(Server):
     def handle_request(self, request):
         return request
 

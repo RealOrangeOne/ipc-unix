@@ -1,16 +1,16 @@
 from functools import partial
 from unittest import TestCase
 
-from ipc_unix import client
+from ipc_unix.simple import send_to
 from tests import EchoServer, get_temp_file_path
 
 
-class BasicServerTestCase(TestCase):
+class SimpleServerTestCase(TestCase):
     def setUp(self):
         self.socket_path = get_temp_file_path()
         self.server = EchoServer(self.socket_path)
         self.server.serve_in_thread()
-        self.send_to_client = partial(client.send_to, self.socket_path)
+        self.send_to_client = partial(send_to, self.socket_path)
 
     def tearDown(self):
         self.server.shutdown()
