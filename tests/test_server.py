@@ -2,12 +2,12 @@ from functools import partial
 from unittest import TestCase
 
 from ipc_unix import client
-from tests import EchoServer, get_random_path
+from tests import EchoServer, get_temp_file_path
 
 
 class BasicServerTestCase(TestCase):
     def setUp(self):
-        self.socket_path = get_random_path()
+        self.socket_path = get_temp_file_path()
         self.server = EchoServer(self.socket_path)
         self.server.serve_in_thread()
         self.send_to_client = partial(client.send_to, self.socket_path)
@@ -20,8 +20,8 @@ class BasicServerTestCase(TestCase):
         response = self.send_to_client(data)
         self.assertEqual(response, data)
 
-    def test_sending_array(self):
-        data = ["foo", "bar"]
+    def test_sending_string(self):
+        data = "foo"
         response = self.send_to_client(data)
         self.assertEqual(response, data)
 
