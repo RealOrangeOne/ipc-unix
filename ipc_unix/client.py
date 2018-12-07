@@ -1,6 +1,7 @@
 import socket
-from ipc_unix.utils import read_payload
+
 import ujson
+from ipc_unix.utils import read_payload
 
 
 def send_to(socket_path, data):

@@ -1,7 +1,8 @@
-from unittest import TestCase
-from tests import EchoServer, get_random_path
-from ipc_unix import client
 from functools import partial
+from unittest import TestCase
+
+from ipc_unix import client
+from tests import EchoServer, get_random_path
 
 
 class BasicServerTestCase(TestCase):
