@@ -3,7 +3,7 @@ import select
 import ujson
 
 BUFFER_SIZE = 4096
-DEFAULT_SOCKET_READ_TIMEOUT = 0.1
+DEFAULT_SOCKET_READ_TIMEOUT = 0.01
 
 
 def socket_has_data(sock, timeout=DEFAULT_SOCKET_READ_TIMEOUT) -> bool:
