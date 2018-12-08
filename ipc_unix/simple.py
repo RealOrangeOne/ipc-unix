@@ -7,11 +7,15 @@ import ujson
 from ipc_unix.utils import read_payload
 
 
-def send_to(socket_path, data: dict):
-    with socket.socket(socket.AF_UNIX, type=socket.SOCK_STREAM) as sock:
-        sock.connect(socket_path)
-        sock.sendall(ujson.dumps(data).encode() + b"\n")
-        return read_payload(sock)[0]
+class Client:
+    def __init__(self, socket_path):
+        self.socket_path = socket_path
+
+    def send(self, data: dict):
+        with socket.socket(socket.AF_UNIX, type=socket.SOCK_STREAM) as sock:
+            sock.connect(self.socket_path)
+            sock.sendall(ujson.dumps(data).encode() + b"\n")
+            return read_payload(sock)[0]
 
 
 class RequestHandler(socketserver.BaseRequestHandler):
