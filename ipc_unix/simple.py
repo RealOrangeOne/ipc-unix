@@ -6,19 +6,19 @@ import ujson
 from ipc_unix.utils import read_payload
 
 
-def send_to(socket_path, data):
+def send_to(socket_path, data: dict):
     with socket.socket(socket.AF_UNIX, type=socket.SOCK_STREAM) as sock:
         sock.connect(socket_path)
         sock.sendall(ujson.dumps(data).encode() + b"\n")
-        return read_payload(sock)
+        return read_payload(sock)[0]
 
 
 class RequestHandler(socketserver.BaseRequestHandler):
-    def handle_request(self, request):
+    def handle_request(self, request: dict):
         raise NotImplementedError("Failed to override `handle_request`")
 
     def handle(self):
-        data = read_payload(self.request)
+        data = read_payload(self.request)[0]
         response = self.handle_request(data)
         self.request.sendall(ujson.dumps(response).encode())
 
@@ -45,5 +45,5 @@ class Server:
         self.shutdown()
         self.server.server_close()
 
-    def handle_request(self, request):
+    def handle_request(self, request: dict):
         raise NotImplementedError("Must override `handle_request`")

@@ -2,6 +2,7 @@ from functools import partial
 from unittest import TestCase
 
 from ipc_unix.simple import send_to
+from ipc_unix.utils import BUFFER_SIZE
 from tests import EchoServer, get_temp_file_path
 
 
@@ -20,19 +21,10 @@ class SimpleServerTestCase(TestCase):
         response = self.send_to_client(data)
         self.assertEqual(response, data)
 
-    def test_sending_string(self):
-        data = "foo"
-        response = self.send_to_client(data)
-        self.assertEqual(response, data)
-
     def test_sending_full_buffer(self):
-        data = ["foo"] * 4096  # Pad out the buffer
+        data = {"foo" + str(i): i for i in range(BUFFER_SIZE)}
         response = self.send_to_client(data)
         self.assertEqual(response, data)
-
-    def test_sending_empty_payload(self):
-        response = self.send_to_client("")
-        self.assertEqual(response, "")
 
     def test_multiple_send_to_same_server(self):
         data = {"foo": "bar"}

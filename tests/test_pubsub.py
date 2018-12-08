@@ -16,13 +16,16 @@ class PubSubTestCase(TestCase):
 
     def test_transmits(self):
         self.publisher.write({"foo": "bar"})
-        response = self.subscriber.get_message()
+        response = self.subscriber.get_latest_message()
         self.assertEqual(response, {"foo": "bar"})
+
+    def test_no_messages(self):
+        self.assertIsNone(self.subscriber.get_latest_message())
+        self.assertFalse(self.subscriber.has_data)
 
     def test_buffers_messages(self):
         for i in range(5):
-            self.publisher.write(i)
-        messages = []
-        for i in range(5):
-            messages.append(self.subscriber.get_message())
-        self.assertEqual(messages, [0, 1, 2, 3, 4])
+            self.publisher.write({"data": i})
+        all_messages = self.subscriber.flush_data()
+        message_ids = [message["data"] for message in all_messages]
+        self.assertEqual(message_ids, [0, 1, 2, 3, 4])
