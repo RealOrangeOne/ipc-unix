@@ -9,6 +9,7 @@ class PubSubTestCase(TestCase):
         self.socket_path = get_temp_file_path()
         self.publisher = pubsub.Publisher(self.socket_path)
         self.subscriber = pubsub.Subscriber(self.socket_path)
+        self.publisher.accept_outstanding_connections()
 
     def tearDown(self):
         self.publisher.close()
@@ -39,6 +40,7 @@ class PubSubTestCase(TestCase):
 
     def test_multiple_subscribers(self):
         subscriber_2 = pubsub.Subscriber(self.socket_path)
+        self.publisher.accept_outstanding_connections()
         self.publisher.write({"foo": "bar"})
         self.assertEqual(self.subscriber.get_latest_message(), {"foo": "bar"})
         self.assertEqual(subscriber_2.get_latest_message(), {"foo": "bar"})
@@ -47,6 +49,7 @@ class PubSubTestCase(TestCase):
         subscribers = []
         for i in range(100):
             subscribers.append(pubsub.Subscriber(self.socket_path))
+        self.publisher.accept_outstanding_connections()
         self.publisher.write({"foo": "bar"})
         for subscriber in subscribers:
             self.assertEqual(subscriber.get_latest_message(), {"foo": "bar"})
@@ -55,3 +58,19 @@ class PubSubTestCase(TestCase):
     def test_no_subscribers(self):
         self.subscriber.close()
         self.publisher.write({"foo": "bar"})
+
+    def test_cant_accept_connections_with_thread_running(self):
+        self.publisher.start()
+        with self.assertRaises(Exception) as e:
+            self.publisher.accept_outstanding_connections()
+        self.assertIn(
+            "Cannot accept connections manually whilst thread is running",
+            str(e.exception),
+        )
+
+    def test_accepts_connections(self):
+        self.assertEqual(len(self.publisher.connections), 1)
+        pubsub.Subscriber(self.socket_path)
+        self.assertEqual(len(self.publisher.connections), 1)
+        self.publisher.accept_outstanding_connections()
+        self.assertEqual(len(self.publisher.connections), 2)
