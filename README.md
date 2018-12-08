@@ -4,6 +4,8 @@
 
 Simple Inter-Process Communication using unix sockets for Python.
 
+__Note__: Whilst mostly working, there's still some fairly common cases which haven't been tested. Use at your own risk until this message is removed.
+
 ## Examples
 
 For some more concrete examples, check out the `tests/` directory.
