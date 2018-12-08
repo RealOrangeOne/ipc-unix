@@ -11,4 +11,4 @@ jobs:
             - run: env/bin/pip install -e .
             - run: env/bin/pip install -r dev-requirements.txt
             - run: ./scripts/test.sh
-            - run: ./scripts/black.sh
+            - run: ./scripts/lint.sh
