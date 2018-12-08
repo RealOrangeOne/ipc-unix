@@ -4,7 +4,7 @@ import socketserver
 import threading
 
 import ujson
-from ipc_unix.utils import read_payload
+from ipc_unix.utils import NEW_LINE, read_payload
 
 
 class Client:
@@ -14,7 +14,7 @@ class Client:
     def send(self, data: dict):
         with socket.socket(socket.AF_UNIX, type=socket.SOCK_STREAM) as sock:
             sock.connect(self.socket_path)
-            sock.sendall(ujson.dumps(data).encode() + b"\n")
+            sock.sendall(ujson.dumps(data).encode() + NEW_LINE)
             return read_payload(sock)[0]
 
 

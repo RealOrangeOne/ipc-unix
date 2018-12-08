@@ -4,7 +4,12 @@ import socket
 import threading
 
 import ujson
-from ipc_unix.utils import DEFAULT_SOCKET_READ_TIMEOUT, read_payload, socket_has_data
+from ipc_unix.utils import (
+    DEFAULT_SOCKET_READ_TIMEOUT,
+    NEW_LINE,
+    read_payload,
+    socket_has_data,
+)
 
 
 class Subscriber:
@@ -93,7 +98,7 @@ class Publisher:
         dead_sockets = []
 
         if writable:
-            data = ujson.dumps(message).encode() + b"\n"
+            data = ujson.dumps(message).encode() + NEW_LINE
             for sock in writable:
                 try:
                     sock.send(data)
