@@ -1,14 +1,17 @@
+import os
 import select
 import socket
 
 import ujson
-from ipc_unix.utils import DEFAULT_SOCKET_READ_TIMEOUT, read_payload, socket_has_data
+from ipc_unix.utils import read_payload, socket_has_data
 
 
 class Subscriber:
     def __init__(self, socket_path):
         self.socket_path = socket_path
-        self.socket = socket.socket(socket.AF_UNIX, type=socket.SOCK_STREAM)
+        self.socket = socket.socket(
+            socket.AF_UNIX, type=socket.SOCK_STREAM | socket.SOCK_NONBLOCK
+        )
         self.socket.connect(self.socket_path)
 
     @property
@@ -37,9 +40,11 @@ class Subscriber:
 class Publisher:
     def __init__(self, socket_path):
         self.socket_path = socket_path
-        self.master_socket = socket.socket(socket.AF_UNIX, type=socket.SOCK_STREAM)
+        self.master_socket = socket.socket(
+            socket.AF_UNIX, type=socket.SOCK_STREAM | socket.SOCK_NONBLOCK
+        )
         self.master_socket.bind(self.socket_path)
-        self.master_socket.listen(1)
+        self.master_socket.listen()
         self.connections = []
 
     def close(self):
@@ -57,9 +62,7 @@ class Publisher:
     def write(self, message: dict):
         self.accept_new_connection()
 
-        _, writable, errorable = select.select(
-            [], self.connections, [], DEFAULT_SOCKET_READ_TIMEOUT
-        )
+        _, writable, errorable = select.select([], self.connections, [], 1)
 
         dead_sockets = []
 
