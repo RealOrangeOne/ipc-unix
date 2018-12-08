@@ -27,6 +27,7 @@ client = Client(socket_path)
 print(client.send({"foo": "bar"}))
 >>> {"foo": "bar"}
 
+server.close()s
 ```
 
 ### Pub-Sub
