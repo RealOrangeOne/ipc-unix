@@ -47,6 +47,7 @@ class Publisher:
         for connection in self.connections:
             connection.close()
         self.connections.clear()
+        os.remove(self.socket_path)
 
     def accept_new_connection(self):
         while socket_has_data(self.master_socket):
