@@ -24,6 +24,12 @@ class Subscriber:
     def has_data(self):
         return socket_has_data(self.socket)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self.close()
+
     def listen(self):
         while True:
             yield from self.get_message()
@@ -57,6 +63,13 @@ class Publisher:
         self.new_connections_thread = threading.Thread(
             target=self._accept_new_connections
         )
+
+    def __enter__(self):
+        self.start()
+        return self
+
+    def __exit__(self, *args):
+        self.close()
 
     def start(self):
         self.accepting_new_connections.set()
