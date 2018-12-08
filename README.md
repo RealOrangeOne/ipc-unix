@@ -4,8 +4,9 @@
 
 Simple Inter-Process Communication using unix sockets for Python.
 
-
 ## Examples
+
+For some more concrete examples, check out the `tests/` directory.
 
 ### Call / Response
 
