@@ -2,7 +2,7 @@ import select
 import socket
 
 import ujson
-from ipc_unix.utils import DEFAULT_SOCKET_TIMEOUT, read_payload, socket_has_data
+from ipc_unix.utils import DEFAULT_SOCKET_READ_TIMEOUT, read_payload, socket_has_data
 
 
 class Subscriber:
@@ -55,7 +55,7 @@ class Publisher:
         self.accept_new_connection()
 
         _, writable, errorable = select.select(
-            [], self.connections, [], DEFAULT_SOCKET_TIMEOUT
+            [], self.connections, [], DEFAULT_SOCKET_READ_TIMEOUT
         )
 
         dead_sockets = []
