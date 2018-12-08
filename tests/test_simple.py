@@ -14,7 +14,7 @@ class SimpleServerTestCase(TestCase):
         self.send_to_client = partial(send_to, self.socket_path)
 
     def tearDown(self):
-        self.server.shutdown()
+        self.server.close()
 
     def test_sending_dict(self):
         data = {"foo": "bar"}

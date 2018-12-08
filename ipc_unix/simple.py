@@ -38,11 +38,8 @@ class Server:
         thread.start()
         return thread
 
-    def shutdown(self):
-        self.server.shutdown()
-
     def close(self):
-        self.shutdown()
+        self.server.shutdown()
         self.server.server_close()
 
     def handle_request(self, request: dict):
