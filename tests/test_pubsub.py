@@ -42,4 +42,16 @@ class PubSubTestCase(TestCase):
         self.publisher.write({"foo": "bar"})
         self.assertEqual(self.subscriber.get_latest_message(), {"foo": "bar"})
         self.assertEqual(subscriber_2.get_latest_message(), {"foo": "bar"})
-        subscriber_2.close()
+
+    def test_lots_of_subscribers(self):
+        subscribers = []
+        for i in range(100):
+            subscribers.append(pubsub.Subscriber(self.socket_path))
+        self.publisher.write({"foo": "bar"})
+        for subscriber in subscribers:
+            self.assertEqual(subscriber.get_latest_message(), {"foo": "bar"})
+            subscriber.close()
+
+    def test_no_subscribers(self):
+        self.subscriber.close()
+        self.publisher.write({"foo": "bar"})
