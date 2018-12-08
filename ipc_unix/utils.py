@@ -20,9 +20,4 @@ def read_payload(payload):
         if message == b"":
             break
         data += message
-    parsed_data = []
-    for row in data.split(b"\n"):
-        if not row.strip():
-            continue
-        parsed_data.append(ujson.loads(row))
-    return parsed_data
+    return [ujson.loads(row) for row in data.split(b"\n") if row]
