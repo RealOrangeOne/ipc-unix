@@ -10,7 +10,7 @@ setup(
     packages=["ipc_unix"],
     include_package_data=True,
     zip_safe=False,
-    pathon_requires=">=3.4",
+    pathon_requires=">=3.5",
     install_requires=["ujson"],
     project_urls={"GitHub: Issues": "https://github.com/realorangeone/ipc-unix/issues"},
 )
