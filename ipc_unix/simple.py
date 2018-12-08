@@ -1,6 +1,7 @@
 import socket
 import socketserver
 import threading
+import os
 
 import ujson
 from ipc_unix.utils import read_payload
@@ -28,7 +29,8 @@ class Server:
         class InstanceRequestHandler(RequestHandler):
             handle_request = self.handle_request
 
-        self.server = socketserver.UnixStreamServer(socket_path, InstanceRequestHandler)
+        self.socket_path = socket_path
+        self.server = socketserver.UnixStreamServer(self.socket_path, InstanceRequestHandler)
 
     def serve_forever(self):
         self.server.serve_forever()
@@ -41,6 +43,7 @@ class Server:
     def close(self):
         self.server.shutdown()
         self.server.server_close()
+        os.remove(self.socket_path)
 
     def handle_request(self, request: dict):
         raise NotImplementedError("Must override `handle_request`")
