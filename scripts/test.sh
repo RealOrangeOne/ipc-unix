@@ -4,7 +4,7 @@ set -e
 
 export PATH=env/bin:${PATH}
 
-nose2 $@ -C --coverage ipc_unix
+nose2 $@ -C --coverage ipc_unix --verbose
 
 black tests ipc_unix setup.py --check
 flake8 ipc_unix tests setup.py --ignore=E128,E501
