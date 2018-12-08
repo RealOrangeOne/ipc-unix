@@ -34,7 +34,7 @@ class Server:
             handle_request = self.handle_request
 
         self.socket_path = socket_path
-        self.server = socketserver.UnixStreamServer(
+        self.server = socketserver.ThreadingUnixStreamServer(
             self.socket_path, InstanceRequestHandler
         )
 
