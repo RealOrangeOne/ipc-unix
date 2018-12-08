@@ -1,7 +1,7 @@
+import os
 import socket
 import socketserver
 import threading
-import os
 
 import ujson
 from ipc_unix.utils import read_payload
@@ -30,7 +30,9 @@ class Server:
             handle_request = self.handle_request
 
         self.socket_path = socket_path
-        self.server = socketserver.UnixStreamServer(self.socket_path, InstanceRequestHandler)
+        self.server = socketserver.UnixStreamServer(
+            self.socket_path, InstanceRequestHandler
+        )
 
     def serve_forever(self):
         self.server.serve_forever()
