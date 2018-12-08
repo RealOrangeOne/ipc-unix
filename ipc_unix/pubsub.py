@@ -44,6 +44,8 @@ class Publisher:
 
     def close(self):
         self.master_socket.close()
+        for connection in self.connections:
+            connection.close()
         self.connections.clear()
 
     def accept_new_connection(self):
