@@ -47,7 +47,7 @@ class Publisher:
         self.connections.clear()
 
     def accept_new_connection(self):
-        if socket_has_data(self.master_socket):
+        while socket_has_data(self.master_socket):
             new_socket, _ = self.master_socket.accept()
             self.connections.append(new_socket)
 

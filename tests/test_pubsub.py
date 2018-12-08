@@ -29,3 +29,10 @@ class PubSubTestCase(TestCase):
         all_messages = self.subscriber.flush_data()
         message_ids = [message["data"] for message in all_messages]
         self.assertEqual(message_ids, [0, 1, 2, 3, 4])
+
+    def test_multiple_subscribers(self):
+        subscriber_2 = pubsub.Subscriber(self.socket_path)
+        self.publisher.write({"foo": "bar"})
+        self.assertEqual(self.subscriber.get_latest_message(), {"foo": "bar"})
+        self.assertEqual(subscriber_2.get_latest_message(), {"foo": "bar"})
+        subscriber_2.close()
