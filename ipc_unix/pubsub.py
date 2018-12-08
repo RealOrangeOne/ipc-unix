@@ -4,7 +4,7 @@ import socket
 import threading
 
 import ujson
-from ipc_unix.utils import read_payload, socket_has_data
+from ipc_unix.utils import DEFAULT_SOCKET_READ_TIMEOUT, read_payload, socket_has_data
 
 
 class Subscriber:
@@ -83,7 +83,12 @@ class Publisher:
                 self.connections.append(new_socket)
 
     def write(self, message: dict):
-        _, writable, errorable = select.select([], self.connections, [], 1)
+        _, writable, errorable = select.select(
+            [],
+            self.connections,
+            [],
+            DEFAULT_SOCKET_READ_TIMEOUT * len(self.connections),
+        )
 
         dead_sockets = []
 
